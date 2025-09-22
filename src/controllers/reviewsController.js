@@ -1,32 +1,34 @@
 // TODO: lister les critiques d'un film
-import {createReviewServices, listReviewsByFilmId} from "../services/reviewsServices.js";
-import {createFilmServices} from "../services/filmsServices.js";
-
+import {createReviewServices, deleteReviewServices, listReviewsByFilmId} from "../services/reviewsServices.js";
 export async function listReviews(req, res) {
 
     const filmId = req.params.id;
-    console.log(filmId)
-
         try {
             const reviews = await listReviewsByFilmId(filmId);
-            res.json(reviews);
+            res.status(200).json(reviews);
         } catch (err) {
-            res.status(500).json({ error: "Impossible de charger les films" });
+            res.status(500).json({ error: "Impossible de charger les reviews" });
         }
 }
 // TODO: créer une critique liée à un film
 export async function createReview(req, res) {
     try {
-        // Appel du service
         const{author, rating, comment} = req.body;
         const film = await createReviewServices(req.params.id,{author, rating, comment});
         res.status(201).json(film);
     } catch (err) {
-        res.status(500).json({ error: "Impossible de créer le film" + err});
+        res.status(500).json({ error: "Impossible de créer la review" + err});
     }
 
 
 }
 // TODO: supprimer une critique
 export async function deleteReview(req, res) {
+    try {
+        const film = await deleteReviewServices(req.params.id);
+        res.status(201).json(film);
+    } catch (err) {
+        res.status(500).json({ error: "Impossible de supprimer la review" + err});
+    }
+
 }

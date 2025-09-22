@@ -8,7 +8,6 @@ import {
 
 // TODO: lister les films
 
-// controller
 export async function listFilms(req, res) {
     try {
 
@@ -23,7 +22,6 @@ export async function listFilms(req, res) {
 export async function getFilm(req, res) {
 
     try {
-        // Appel du service
         const film = await getFilmById(parseInt(req.params.id));
         res.json(film);
     } catch (err) {
@@ -34,7 +32,6 @@ export async function getFilm(req, res) {
 // TODO: créer un film
 export async function createFilm(req, res) {
     try {
-        // Appel du service
         const{title, director, year, genre} = req.body;
 
         const film = await createFilmServices({title, director, year, genre});
@@ -48,14 +45,7 @@ export async function createFilm(req, res) {
 export async function updateFilm(req, res) {
     try {
         const{title, director, year, genre} = req.body;
-
-        console.log(req.body);
-
         const film = await updateFilmServices(req.params.id, {title, director, year, genre});
-
-        if (!film) {
-            return res.status(404).json({ error: "Film non trouvé" });
-        }
 
         res.status(200).json(film);
     } catch (err) {

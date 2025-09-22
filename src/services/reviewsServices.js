@@ -16,16 +16,26 @@ export async function listReviewsByFilmId(
 }
 export async function createReviewServices(filmId, { author, rating, comment }) {
     try {
+
+        const now = new Date();
+        const formatted = now.toISOString().slice(0, 19).replace('T', ' ');
+
         const queryText = `
             INSERT INTO reviews (film_id, author, rating, comment, created_at)
-            VALUES ($1, $2, $3, $4)
+            VALUES ($1, $2, $3, $4,$5)
             RETURNING *
         `;
 
-        const result = await query(queryText, [filmId, author, rating, comment, Date.now().toString()]);
+        const result = await query(queryText, [filmId, author, rating, comment, formatted]);
         return result.rows[0];
     } catch (err) {
         throw new Error("Erreur lors de la création du film" +err);
     }
 }
-export async function deleteReview(id) {}
+export async function deleteReviewServices(id) {
+
+        const deleteQuery = "DELETE FROM reviews WHERE id = $1 RETURNING *";
+        const result = await query(deleteQuery, [id]);
+
+        return result.rows[0];
+}

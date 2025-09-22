@@ -63,7 +63,6 @@ export async function updateFilmServices(id, patch) {
 
             const result = await query(queryText, values);
 
-
         return result.rows[0] || null;
     } catch (err) {
         console.error("Erreur updateFilmServices:", err);
