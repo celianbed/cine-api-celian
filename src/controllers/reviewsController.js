@@ -7,7 +7,7 @@ export async function listReviews(req, res) {
             const reviews = await listReviewsByFilmId(filmId);
             res.status(200).json(reviews);
         } catch (err) {
-            res.status(500).json({ error: "Impossible de charger les reviews" });
+            res.status(500).json({ erreur: "Impossible de charger les reviews" });
         }
 }
 // TODO: créer une critique liée à un film
@@ -17,7 +17,7 @@ export async function createReview(req, res) {
         const film = await createReviewServices(req.params.id,{author, rating, comment});
         res.status(201).json(film);
     } catch (err) {
-        res.status(500).json({ error: "Impossible de créer la review" + err});
+        res.status(500).json({ erreur: "Impossible de créer la review" + err});
     }
 
 
@@ -28,7 +28,7 @@ export async function deleteReview(req, res) {
         const film = await deleteReviewServices(req.params.id);
         res.status(201).json(film);
     } catch (err) {
-        res.status(500).json({ error: "Impossible de supprimer la review" + err});
+        res.status(500).json({ erreur: "Impossible de supprimer la review" + err});
     }
 
 }

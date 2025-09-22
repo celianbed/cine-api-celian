@@ -50,7 +50,7 @@ export async function updateFilm(req, res) {
         res.status(200).json(film);
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: "Impossible de mettre à jour le film: " + err.message });
+        res.status(500).json({ erreur: "Impossible de mettre à jour le film: " + err.message });
     }
 }
 // TODO: supprimer un film
@@ -59,13 +59,13 @@ export async function deleteFilm(req, res) {
         const film = await deleteFilmService(req.params.id);
 
         if (!film) {
-            return res.status(404).json({ error: "Film non trouvé" });
+            return res.status(404).json({ erreur: "Film non trouvé" });
         }
 
         res.status(200).json({ message: "Film supprimé", film });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: "Impossible de supprimer le film: " + err.message });
+        res.status(500).json({ erreur: "Impossible de supprimer le film: " + err.message });
     }
 }
 

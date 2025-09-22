@@ -65,7 +65,6 @@ export async function updateFilmServices(id, patch) {
 
         return result.rows[0] || null;
     } catch (err) {
-        console.error("Erreur updateFilmServices:", err);
         throw new Error("Erreur lors de la mise à jour du film: " + err.message);
     }
 }
@@ -73,6 +72,5 @@ export async function deleteFilmService(id) {
     const deleteQuery = "DELETE FROM films WHERE id = $1 RETURNING *";
     const result = await query(deleteQuery, [id]);
 
-    // RETURNING * renvoie le film supprimé, si tu veux juste savoir si ça a marché, tu peux renvoyer result.rowCount
     return result.rows[0];
 }
