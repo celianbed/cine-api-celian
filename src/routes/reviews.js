@@ -3,8 +3,8 @@ import { listReviews, createReview, deleteReview } from "../controllers/reviewsC
 
 const router = Router();
 
-router.get("/films/:id/reviews", listReviews);
-router.post("/films/:id/reviews", createReview);
+router.get("/films/:id", listReviews);
+router.post("/films/:id", createReview);
 router.delete("/:id", deleteReview);
 
 export default router;
