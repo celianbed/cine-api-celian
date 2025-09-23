@@ -10,7 +10,6 @@ export async function listReviewsByFilmId(
 
         return result.rows;
     } catch (err) {
-        console.error("Erreur listFilmsServices:", err);
         throw new Error("Erreur lors de la récupération des films");
     }
 }

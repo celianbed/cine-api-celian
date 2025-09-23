@@ -8,8 +8,7 @@ export async function listFilmsServices({ limit = 50, offset = 0 } = {}) {
 
         return result.rows;
     } catch (err) {
-        console.error("Erreur listFilmsServices:", err);
-        throw new Error("Erreur lors de la récupération des films");
+        throw new Error("Erreur lors de la récupération des films" + err);
     }
 }
 export async function getFilmById(id) {
