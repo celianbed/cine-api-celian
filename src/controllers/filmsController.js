@@ -27,7 +27,7 @@ export async function getFilm(req, res) {
         // Récupère le paramètre 'id' de l'URL et le convertit en entier
         const film = await getFilmById(parseInt(req.params.id));
         // Retourne le film trouvé au format JSON
-        res.json(film);
+        res.status(200).json(film);
     } catch (err) {
         // En cas d'erreur (ex: id non trouvé), retourne un code 500
         res.status(500).json({ error: "Impossible de charger le film" });
@@ -69,9 +69,10 @@ export async function updateFilm(req, res) {
 export async function deleteFilm(req, res) {
     try {
         // Appelle le service pour supprimer le film correspondant à l'id
-        await deleteFilmService(req.params.id);
+        const estSupprimé = await deleteFilmService(req.params.id);
         // Retourne le code HTTP 204 (No Content) car la suppression est réussie et aucune donnée n'est retournée
-        res.sendStatus(204);
+        if (estSupprimé) {res.status(204).json({ confirmation: "Film bien supprimé"});}
+        else {res.status(404).json({ erreur: "Film non trouvée" });}
     } catch (err) {
         // Affiche l'erreur dans la console et retourne un code 500
         console.error(err);

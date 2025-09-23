@@ -1,5 +1,6 @@
 // TODO: lister les critiques d'un film
 import { createReviewServices, deleteReviewServices, listReviewsByFilmId } from "../services/reviewsServices.js";
+import {errorHandler} from "../middleware/errorHandler.js";
 // Import des fonctions du service reviewsServices.js qui interagissent avec la base de données pour les reviews
 
 export async function listReviews(req, res) {
@@ -11,7 +12,7 @@ export async function listReviews(req, res) {
         res.status(200).json(reviews);
     } catch (err) {
         // En cas d'erreur, retourne le code HTTP 500 avec le message d'erreur
-        res.status(500).json({ erreur: "Impossible de charger les reviews :" + err });
+        errorHandler(err, req, res);
     }
 }
 
@@ -27,7 +28,7 @@ export async function createReview(req, res) {
         res.status(201).json(film);
     } catch (err) {
         // Retourne une erreur 500 en cas de problème
-        res.status(500).json({ erreur: "Impossible de créer la review :" + err });
+        errorHandler(err, req, res);
     }
 }
 
@@ -35,11 +36,12 @@ export async function createReview(req, res) {
 export async function deleteReview(req, res) {
     try {
         // Supprime la critique identifiée par req.params.id
-        const review = await deleteReviewServices(parseInt(req.params.id));
+        const estSupprimé = await deleteReviewServices(parseInt(req.params.id));
         // Retourne le code HTTP 204 (No Content) car la suppression a réussi
-        res.sendStatus(204);
+        if (estSupprimé) {res.status(204).json({ confirmation: "Review bien supprimé"});}
+        else {res.status(404).json({ erreur: "Review non trouvée" });}
     } catch (err) {
         // Retourne une erreur 500 en cas de problème
-        res.status(500).json({ erreur: "Impossible de supprimer la review :" + err });
+        errorHandler(err, req, res);
     }
 }
