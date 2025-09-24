@@ -5,7 +5,14 @@ import request from "supertest";
 
 // Création des mocks pour les services de films
 const listFilmsServicesMock = jest.fn(); // Mock de la fonction listFilmsServices
-const getFilmById = jest.fn(); // Mock de la fonction getFilmById
+const getFilmByIdMock = jest.fn().mockResolvedValue({
+        id: 15,
+        title: "Film Mocké",
+        director: "M. Mock",
+        year: 2021,
+        genre: "Mocké"
+    }
+); // Mock de la fonction getFilmById
 const createFilmServicesMock = jest.fn().mockResolvedValue({
     id: 15,
     title: "Film Mocké",
@@ -33,7 +40,7 @@ const deleteFilmServiceMock = jest.fn().mockResolvedValue({
 // On remplace le module réel services 'filmsServices' par nos mocks
 jest.unstable_mockModule('../src/services/filmsServices.js', () => ({
     listFilmsServices: listFilmsServicesMock,
-    getFilmById: getFilmById,
+    getFilmById: getFilmByIdMock,
     createFilmServices: createFilmServicesMock,
     updateFilmServices: updateFilmServicesMock,
     deleteFilmService: deleteFilmServiceMock
@@ -48,8 +55,6 @@ const app = appModule.default || appModule.app;
 ///Test des endpoints
 ///---
 
-
-
 // Test pour récupérer tous les films
 describe("Récupérer tous  les films", () => {
     it("GET /films ", async () => {
@@ -59,10 +64,32 @@ describe("Récupérer tous  les films", () => {
 });
 
 // Test pour récupérer un film par id
-describe("Récupérer un seul film", () => {
-    it("GET /films/{id} -> array (may be empty)", async () => {
-        const res = await request(app).get("/films/1");
-        expect(res.statusCode).toBe(200);// Vérifie que le code HTTP est 200
+describe("Récupérer un film par id", () => {
+
+    it("GET /films/:id -> film existant (mock)", async () => {
+        const inputId = 15; // id envoyé dans la requête
+        const { statusCode, body } = await supertest(app).get(`/films/${inputId}`);
+        expect(statusCode).toBe(200); // Vérifie que le code HTTP est 200
+        expect(getFilmByIdMock).toHaveBeenCalledWith(inputId); // Vérifie que le service a été appelé avec le bon id
+        expect(body).toEqual({
+            id: 15,
+            title: "Film Mocké",
+            director: "M. Mock",
+            year: 2021,
+            genre: "Mocké"
+        }); // Vérifie que la réponse correspond au mock
+    });
+
+    it("GET /films/:id -> film non trouvé (mock)", async () => {
+        // On redéfinit le mock pour retourner null ou undefined afin de simuler un film inexistant
+        getFilmByIdMock.mockResolvedValue([]);
+
+        const inputId = 999; // id qui n'existe pas
+        const { statusCode, body } = await supertest(app).get(`/films/${inputId}`);
+
+        expect(statusCode).toBe(404); // Vérifie que le code HTTP est 404
+        expect(getFilmByIdMock).toHaveBeenCalledWith(inputId); // Vérifie que le service a été appelé avec le bon id
+        expect(body).toEqual({ erreur: "Film non trouvé" }); // Vérifie le corps de la réponse
     });
 });
 

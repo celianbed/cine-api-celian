@@ -25,12 +25,17 @@ export async function listFilms(req, res) {
 export async function getFilm(req, res) {
     try {
         // Récupère le paramètre 'id' de l'URL et le convertit en entier
-        const film = await getFilmById(parseInt(req.params.id));
+
+        const filmId = parseInt(req.params.id)
+        const film = await getFilmById(filmId);
         // Retourne le film trouvé au format JSON
-        res.status(200).json(film);
+        if (film.length === 0) {
+            return res.status(404).json({erreur:"Film non trouvé"});
+        }
+        return res.status(200).json(film);
     } catch (err) {
-        // En cas d'erreur (ex: id non trouvé), retourne un code 500
-        res.status(500).json({ error: "Impossible de charger le film" });
+        // En cas d'erreur, retourne un code 500
+        return res.status(500).json({ error: "Impossible de charger le film" });
     }
 }
 
@@ -56,6 +61,8 @@ export async function updateFilm(req, res) {
         const { title, director, year, genre } = req.body;
         // Appelle le service pour mettre à jour le film correspondant à l'id
         const film = await updateFilmServices(parseInt(req.params.id), { title, director, year, genre });
+
+
         // Retourne le film mis à jour avec le code HTTP 200 (OK)
         res.status(200).json(film);
     } catch (err) {

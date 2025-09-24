@@ -1,13 +1,19 @@
 // TODO: lister les critiques d'un film
 import { createReviewServices, deleteReviewServices, listReviewsByFilmId } from "../services/reviewsServices.js";
 import {errorHandler} from "../middleware/errorHandler.js";
+import {getFilmById} from "../services/filmsServices.js";
 // Import des fonctions du service reviewsServices.js qui interagissent avec la base de données pour les reviews
 
 export async function listReviews(req, res) {
     try {
         // Récupère l'id du film depuis les paramètres d'URL
+        const filmId = parseInt(req.params.id)
         // Appelle le service pour récupérer toutes les critiques liées à ce film
-        const reviews = await listReviewsByFilmId(req.params.id);
+        const reviews = await listReviewsByFilmId(filmId);
+
+        if (reviews === 0) {
+            return res.status(404).json({erreur:"Aucune review trouvé"});
+        }
         // Retourne la liste des critiques avec le code HTTP 200 (OK)
         res.status(200).json(reviews);
     } catch (err) {
