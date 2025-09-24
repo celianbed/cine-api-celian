@@ -15,7 +15,7 @@ export async function listReviews(req, res) {
             return res.status(404).json({erreur:"Aucune review trouvé"});
         }
         // Retourne la liste des critiques avec le code HTTP 200 (OK)
-        res.status(200).json(reviews);
+        return res.status(200).json(reviews);
     } catch (err) {
         // En cas d'erreur, retourne le code HTTP 500 avec le message d'erreur
         errorHandler(err, req, res);
@@ -31,7 +31,7 @@ export async function createReview(req, res) {
         // parseInt est utilisé pour convertir l'id en nombre
         const film = await createReviewServices(parseInt(req.params.id), { author, rating, comment });
         // Retourne la critique créée avec le code HTTP 201 (Created)
-        res.status(201).json(film);
+        return res.status(201).json(film);
     } catch (err) {
         // Retourne une erreur 500 en cas de problème
         errorHandler(err, req, res);
@@ -45,7 +45,7 @@ export async function deleteReview(req, res) {
         const estSupprimé = await deleteReviewServices(parseInt(req.params.id));
         // Retourne le code HTTP 204 (No Content) car la suppression a réussi
         if (estSupprimé) {res.status(204).json({ confirmation: "Review bien supprimé"});}
-        else {res.status(404).json({ erreur: "Review non trouvée" });}
+        else {return res.status(404).json({ erreur: "Review non trouvée" });}
     } catch (err) {
         // Retourne une erreur 500 en cas de problème
         errorHandler(err, req, res);

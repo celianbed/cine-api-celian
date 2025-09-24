@@ -56,7 +56,6 @@ describe("Récupérer toutes les reviews d'un film", () => {
 
         const { statusCode, body } = await supertest(app).get(`/reviews/films/15`);
 
-        console.log(body);
 
         expect(statusCode).toBe(200);
         expect(listReviewsByFilmIdMock).toHaveBeenCalledWith(15);

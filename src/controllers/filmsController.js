@@ -14,10 +14,10 @@ export async function listFilms(req, res) {
         // Appelle la fonction de service pour récupérer tous les films
         const films = await listFilmsServices({});
         // Retourne la liste des films avec le code HTTP 200 (OK)
-        res.status(200).json(films);
+        return res.status(200).json(films);
     } catch (err) {
         // En cas d'erreur, retourne le code HTTP 500 (Internal Server Error) et un message
-        res.status(500).json({ error: "Impossible de charger les films" + err });
+        return res.status(500).json({ error: "Impossible de charger les films" + err });
     }
 }
 
@@ -47,10 +47,10 @@ export async function createFilm(req, res) {
         // Appelle le service pour créer un nouveau film en base de données
         const film = await createFilmServices({ title, director, year, genre });
         // Retourne le film créé avec le code HTTP 201 (Created)
-        res.status(201).json(film);
+        return res.status(201).json(film);
     } catch (err) {
         // En cas d'erreur, retourne un code 500
-        res.status(500).json({ error: "Impossible de créer le film" });
+        return res.status(500).json({ error: "Impossible de créer le film" });
     }
 }
 
@@ -64,11 +64,11 @@ export async function updateFilm(req, res) {
 
 
         // Retourne le film mis à jour avec le code HTTP 200 (OK)
-        res.status(200).json(film);
+        return res.status(200).json(film);
     } catch (err) {
         // Affiche l'erreur dans la console et retourne un code 500
         console.error(err);
-        res.status(500).json({ erreur: "Impossible de mettre à jour le film: " + err.message });
+        return res.status(500).json({ erreur: "Impossible de mettre à jour le film: " + err.message });
     }
 }
 
@@ -78,11 +78,11 @@ export async function deleteFilm(req, res) {
         // Appelle le service pour supprimer le film correspondant à l'id
         const estSupprimé = await deleteFilmService(req.params.id);
         // Retourne le code HTTP 204 (No Content) car la suppression est réussie et aucune donnée n'est retournée
-        if (estSupprimé) {res.status(204).json({ confirmation: "Film bien supprimé"});}
+        if (estSupprimé) {return res.status(204).json({ confirmation: "Film bien supprimé"});}
         else {res.status(404).json({ erreur: "Film non trouvée" });}
     } catch (err) {
         // Affiche l'erreur dans la console et retourne un code 500
         console.error(err);
-        res.status(500).json({ erreur: "Impossible de supprimer le film: " + err.message });
+        return res.status(500).json({ erreur: "Impossible de supprimer le film: " + err.message });
     }
 }
