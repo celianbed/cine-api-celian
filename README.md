@@ -2,5 +2,5 @@
 
 ## 🚀 Démarrage rapide
 
-1. run npm i
+1. run *npm i*
 2. ajouter un fichier .enc pour connecter sa BDD
